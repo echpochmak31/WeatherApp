@@ -1,41 +1,72 @@
+using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using WeatherApp.DataAccess;
 using WeatherApp.Models;
 using WeatherApp.Services;
+using WeatherApp.Services.Security;
 using WeatherApp.Services.WebClients;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var config = builder.Configuration;
+config.AddEnvironmentVariables();
+
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<WeatherApiWebClient>();
 
-var mapperConfig = new MapperConfiguration(mc =>
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddAuthentication(x =>
 {
-    mc.AddProfile(new MappingProfile());
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["WEATHER_APP_SECRET_KEY"])),
+        ValidateLifetime = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = true
+    };
 });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddDbContext<WeatherContext>(options =>
+{
+    options.UseNpgsql(config["WEATHER_APP_POSTGRESQL_CONN_STR"]);
+});
+
+var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
 
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
-

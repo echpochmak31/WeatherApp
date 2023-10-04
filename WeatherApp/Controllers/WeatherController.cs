@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WeatherApp.Models;
 using WeatherApp.Services;
 
 namespace WeatherApp.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("weather")]
 public class WeatherController : Controller
@@ -18,13 +20,13 @@ public class WeatherController : Controller
     }
 
     [HttpGet("current")]
-    public LocationWeather GetCityWeather([FromQuery] string location)
+    public LocationWeather GetCurrentWeather([FromQuery] string location)
     {
         return _weatherService.GetCurrentWeather(location);
     }
 
     [HttpGet("location/lookup")]
-    public List<Location> CityLookup([FromQuery] string location)
+    public List<Location> LocationsLookup([FromQuery] string location)
     {
         return _weatherService.LocationsLookup(location);
     }

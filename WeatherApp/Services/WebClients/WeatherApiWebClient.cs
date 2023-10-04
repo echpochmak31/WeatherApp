@@ -1,9 +1,6 @@
 ﻿using System.Net.Http.Headers;
-using System.Text.Json;
 
 namespace WeatherApp.Services.WebClients;
-
-using System.Net;
 
 public class WeatherApiWebClient
 {
@@ -19,7 +16,7 @@ public class WeatherApiWebClient
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        string apiKey = _configuration["WeatherApiClientSetting:ApiKey"];
+        string apiKey = _configuration["WEATHER_APP_API_KEY"];
         var baseUrl = _configuration["WeatherApiClientSetting:BaseUrl"];
         _baseUrl = baseUrl;
         _httpClient.DefaultRequestHeaders.Add("key", apiKey);
