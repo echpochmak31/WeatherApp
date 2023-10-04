@@ -25,14 +25,14 @@ public class WeatherApiWebClient
         _httpClient.DefaultRequestHeaders.Add("key", apiKey);
     }
 
-    public string GetCityCurrentWeather(string q)
+    public string GetCurrentWeather(string q)
     {
         var url = $"{_baseUrl}/current.json?q={q}";
         var response = _httpClient.GetAsync(url).Result;
         return response.Content.ReadAsStringAsync().Result;
     }
 
-    public string CityLookup(string q)
+    public string LocationLookup(string q)
     {
         var url = $"{_baseUrl}/search.json?q={q}";
         var response = _httpClient.GetAsync(url).Result;

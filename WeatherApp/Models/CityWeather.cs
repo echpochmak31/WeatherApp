@@ -2,9 +2,9 @@
 
 namespace WeatherApp.Models;
 
-public class CityWeather
+public class LocationWeather
 {
-    public string City { get; set; }
+    public string Location { get; set; }
     public float TemperatureСelsius { get; set; }
     public DateTimeOffset LastUpdated { get; set; }
 };

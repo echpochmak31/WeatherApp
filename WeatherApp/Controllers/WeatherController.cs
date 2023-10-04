@@ -5,7 +5,7 @@ using WeatherApp.Services;
 namespace WeatherApp.Controllers;
 
 [ApiController]
-[Route("weather/city")]
+[Route("weather")]
 public class WeatherController : Controller
 {
     private readonly ILogger<WeatherController> _logger;
@@ -17,15 +17,15 @@ public class WeatherController : Controller
         _weatherService = weatherService;
     }
 
-    [HttpGet("current/{cityName}")]
-    public CityWeather GetCityWeather([FromRoute] string cityName)
+    [HttpGet("current")]
+    public LocationWeather GetCityWeather([FromQuery] string location)
     {
-        return _weatherService.GetCityCurrentWeather(cityName);
+        return _weatherService.GetCurrentWeather(location);
     }
 
-    [HttpGet("lookup/{cityName}")]
-    public List<City> CityLookup([FromRoute] string cityName)
+    [HttpGet("location/lookup")]
+    public List<Location> CityLookup([FromQuery] string location)
     {
-        return _weatherService.CityLookup(cityName);
+        return _weatherService.LocationsLookup(location);
     }
 }

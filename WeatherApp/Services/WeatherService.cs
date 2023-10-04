@@ -3,6 +3,7 @@ using WeatherApp.Models;
 using WeatherApp.Models.Responses;
 using WeatherApp.Services.WebClients;
 using AutoMapper;
+using Location = WeatherApp.Models.Location;
 
 namespace WeatherApp.Services;
 
@@ -18,18 +19,19 @@ public class WeatherService : IWeatherService
         _mapper = mapper;
     }
 
-    public CityWeather GetCityCurrentWeather(string city)
+    public LocationWeather GetCurrentWeather(string q)
     {
-        ArgumentNullException.ThrowIfNull(city);
-        var jsonResponse = _webClient.GetCityCurrentWeather(city);
-        var cityWeatherResponse = JsonSerializer.Deserialize<CityWeatherResponse>(jsonResponse);
-        return _mapper.Map<CityWeather>(cityWeatherResponse);
+        ArgumentNullException.ThrowIfNull(q);
+        var jsonResponse = _webClient.GetCurrentWeather(q);
+        var cityWeatherResponse = JsonSerializer.Deserialize<LocationWeatherResponse>(jsonResponse);
+        return _mapper.Map<LocationWeather>(cityWeatherResponse);
     }
 
-    public List<City> CityLookup(string q)
+    public List<Location> LocationsLookup(string q)
     {
-        var jsonResponse = _webClient.CityLookup(q);
-        var cityLookupResponses = JsonSerializer.Deserialize<List<CityLookupResponse>>(jsonResponse);
-        return _mapper.Map<List<City>>(cityLookupResponses);
+        ArgumentNullException.ThrowIfNull(q);
+        var jsonResponse = _webClient.LocationLookup(q);
+        var cityLookupResponses = JsonSerializer.Deserialize<List<LocationLookupResponse>>(jsonResponse);
+        return _mapper.Map<List<Location>>(cityLookupResponses);
     }
 }
