@@ -1,14 +1,17 @@
-﻿using Lombok.NET;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Lombok.NET;
 
 namespace WeatherApp.Models;
 
 // [RequiredArgsConstructor(MemberType = MemberType.Property, AccessTypes = AccessTypes.Public)]
 public class Location
 {
-    public int Id { get; set; }
+    public long LocationId { get; set; }
     public string Name { get; set; }
     public string Region { get; set; }
+
     public string Country { get; set; }
-    public float Latitude { get; set; }
-    public float Longitude { get; set; }
-};
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
+}
