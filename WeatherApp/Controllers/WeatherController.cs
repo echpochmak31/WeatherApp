@@ -6,7 +6,7 @@ using WeatherApp.Services;
 
 namespace WeatherApp.Controllers;
 
-// [Authorize]
+[Authorize]
 [ApiController]
 [Route("weather")]
 public class WeatherController : Controller
