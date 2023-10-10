@@ -6,10 +6,12 @@ namespace WeatherApp.Services.Daemons;
 public class AddNewLocationsWeatherTask : IScheduledTask
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly int _periodInSeconds;
 
-    public AddNewLocationsWeatherTask(IServiceScopeFactory scopeFactory)
+    public AddNewLocationsWeatherTask(IServiceScopeFactory scopeFactory, IConfiguration configuration)
     {
         _scopeFactory = scopeFactory;
+        _periodInSeconds = Convert.ToInt32(configuration["Scheduled:AddNewLocationsWeatherPeriodInSeconds"]);
     }
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -39,7 +41,7 @@ public class AddNewLocationsWeatherTask : IScheduledTask
                 await dbContext.SaveChangesAsync(cancellationToken);
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(_periodInSeconds), cancellationToken);
         }
     }
 }
