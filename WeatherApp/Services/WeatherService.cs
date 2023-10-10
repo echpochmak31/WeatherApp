@@ -19,10 +19,10 @@ public class WeatherService : IWeatherService
         _mapper = mapper;
     }
 
-    public LocationWeather GetCurrentWeather(string q)
+    public async Task<LocationWeather> GetCurrentWeatherAsync(string q)
     {
         ArgumentNullException.ThrowIfNull(q);
-        var jsonResponse = _webClient.GetCurrentWeather(q);
+        var jsonResponse = await _webClient.GetCurrentWeatherAsync(q);
         var cityWeatherResponse = JsonSerializer.Deserialize<LocationWeatherResponse>(jsonResponse);
         return _mapper.Map<LocationWeather>(cityWeatherResponse);
     }
@@ -31,7 +31,7 @@ public class WeatherService : IWeatherService
     {
         ArgumentNullException.ThrowIfNull(q);
         var jsonResponse = _webClient.LocationLookup(q);
-        var cityLookupResponses = JsonSerializer.Deserialize<List<LocationLookupResponse>>(jsonResponse);
+        var cityLookupResponses = JsonSerializer.Deserialize<List<LocationLookupResponse>>(jsonResponse.Result);
         return _mapper.Map<List<Location>>(cityLookupResponses);
     }
 }

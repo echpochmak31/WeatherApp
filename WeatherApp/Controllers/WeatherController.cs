@@ -23,9 +23,9 @@ public class WeatherController : Controller
     }
 
     [HttpGet("current")]
-    public LocationWeather GetCurrentWeather([FromQuery] string location)
+    public LocationWeather GetCurrentWeatherAsync([FromQuery] string location)
     {
-        return _weatherService.GetCurrentWeather(location);
+        return _weatherService.GetCurrentWeatherAsync(location).Result;
     }
 
     [HttpGet("location/lookup")]

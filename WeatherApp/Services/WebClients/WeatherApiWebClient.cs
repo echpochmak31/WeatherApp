@@ -22,17 +22,17 @@ public class WeatherApiWebClient
         _httpClient.DefaultRequestHeaders.Add("key", apiKey);
     }
 
-    public string GetCurrentWeather(string q)
+    public async Task<string> GetCurrentWeatherAsync(string q)
     {
         var url = $"{_baseUrl}/current.json?q={q}";
-        var response = _httpClient.GetAsync(url).Result;
-        return response.Content.ReadAsStringAsync().Result;
+        var response = await _httpClient.GetAsync(url);
+        return await response.Content.ReadAsStringAsync();
     }
 
-    public string LocationLookup(string q)
+    public async Task<string> LocationLookup(string q)
     {
         var url = $"{_baseUrl}/search.json?q={q}";
-        var response = _httpClient.GetAsync(url).Result;
-        return response.Content.ReadAsStringAsync().Result;
+        var response = await _httpClient.GetAsync(url);
+        return await response.Content.ReadAsStringAsync();
     }
 }
