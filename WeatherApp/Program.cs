@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using WeatherApp.DataAccess;
 using WeatherApp.Models;
 using WeatherApp.Services;
+using WeatherApp.Services.Daemons;
 using WeatherApp.Services.Security;
 using WeatherApp.Services.WebClients;
 
@@ -23,6 +24,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<WeatherApiWebClient>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+
+builder.Services.AddSingleton<IScheduledTask, AddNewLocationsWeatherTask>();
+builder.Services.AddSingleton<IScheduledTask, UpdateWeatherInfoTask>();
+builder.Services.AddHostedService<ScheduledTaskService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 

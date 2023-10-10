@@ -4,6 +4,6 @@ namespace WeatherApp.Services;
 
 public interface IWeatherService
 {
-    public LocationWeather GetCurrentWeather(string q);
+    public Task<LocationWeather> GetCurrentWeatherAsync(string q);
     public List<Location> LocationsLookup(string q);
 }
