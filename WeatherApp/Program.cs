@@ -1,8 +1,10 @@
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using WeatherApp.DataAccess;
 using WeatherApp.Models;
 using WeatherApp.Services;
@@ -14,8 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 config.AddEnvironmentVariables();
-
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -40,7 +40,8 @@ builder.Services.AddAuthentication(x =>
 {
     x.TokenValidationParameters = new TokenValidationParameters
     {
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["WEATHER_APP_SECRET_KEY"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["WEATHER_APP_SECRET_KEY"] ?? throw new
+            InvalidOperationException())),
         ValidateLifetime = true,
         ValidateIssuer = false,
         ValidateAudience = false,
@@ -70,8 +71,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

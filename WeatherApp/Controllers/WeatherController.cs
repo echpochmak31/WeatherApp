@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WeatherApp.Models;
+using WeatherApp.Models.Dto;
 using WeatherApp.Models.Requests;
 using WeatherApp.Services;
 
@@ -29,7 +30,7 @@ public class WeatherController : Controller
     }
 
     [HttpGet("location/lookup")]
-    public List<Location> LocationsLookup([FromQuery] string location)
+    public List<LocationDto> LocationsLookup([FromQuery] string location)
     {
         return _weatherService.LocationsLookup(location);
     }
@@ -42,9 +43,16 @@ public class WeatherController : Controller
     }
     
     [HttpGet("location/group")]
-    public object GetUserLocationGroups([FromQuery] string userEmail)
+    public List<LocationGroupDto> GetUserLocationGroups([FromQuery] string userEmail)
     {
         return _groupService.GetUserLocationGroups(userEmail);
+        
+    }
+    
+    [HttpGet("location/group/info")]
+    public List<LocationWeatherDto> GetUserLocationWeatherInfo([FromQuery] string userEmail)
+    {
+        return _groupService.GetUserLocationWeahterInfo(userEmail);
     }
     
 }

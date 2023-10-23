@@ -5,7 +5,7 @@ using Lombok.NET;
 namespace WeatherApp.Models;
 
 // [RequiredArgsConstructor(MemberType = MemberType.Property, AccessTypes = AccessTypes.Public)]
-public class Location
+public class LocationDto
 {
     public long LocationId { get; set; }
     public string Name { get; set; }

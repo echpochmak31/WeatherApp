@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WeatherApp.DataAccess;
 using WeatherApp.Models;
 using WeatherApp.Models.Dto;
+using WeatherApp.Models.Responses;
 using WeatherApp.Models.Security;
 
 namespace WeatherApp.Services;
@@ -52,6 +53,23 @@ public class GroupService : IGroupService
             .Where(x => x.UserId == user.Id)
             .Include(locationGroup => locationGroup.Items).ToList();
         return _mapper.Map<List<LocationGroupDto>>(src);
+    }
+
+    public List<LocationWeatherDto> GetUserLocationWeahterInfo(string userEmail)
+    {
+        var user = _dbContext.Users.FirstOrDefault(x => x.Email == userEmail);
+        ThrowIfUserDoesNotExist(user);
+        
+        var src = _dbContext.LocationGroups
+            .Where(x => x.UserId == user.Id)
+            .Include(locationGroup => locationGroup.Items)
+            .SelectMany(x => x.Items);
+        
+        var weatherInfo = _dbContext.LocationWeathers
+            .Where(weather => src.Any(item => item.Latitude == weather.Latitude && item.Longitude == weather.Longitude))
+            .ToList();
+        
+        return _mapper.Map<List<LocationWeatherDto>>(weatherInfo);
     }
 
     private void ThrowIfUserDoesNotExist(User? user)

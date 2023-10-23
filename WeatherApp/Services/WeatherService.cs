@@ -3,7 +3,7 @@ using WeatherApp.Models;
 using WeatherApp.Models.Responses;
 using WeatherApp.Services.WebClients;
 using AutoMapper;
-using Location = WeatherApp.Models.Location;
+using Location = WeatherApp.Models.LocationDto;
 
 namespace WeatherApp.Services;
 
@@ -20,18 +20,18 @@ public class WeatherService : IWeatherService
     }
 
     public async Task<LocationWeather> GetCurrentWeatherAsync(string q)
-    {
+    { 
         ArgumentNullException.ThrowIfNull(q);
         var jsonResponse = await _webClient.GetCurrentWeatherAsync(q);
         var cityWeatherResponse = JsonSerializer.Deserialize<LocationWeatherResponse>(jsonResponse);
         return _mapper.Map<LocationWeather>(cityWeatherResponse);
     }
 
-    public List<Location> LocationsLookup(string q)
+    public List<LocationDto> LocationsLookup(string q)
     {
         ArgumentNullException.ThrowIfNull(q);
         var jsonResponse = _webClient.LocationLookup(q);
         var cityLookupResponses = JsonSerializer.Deserialize<List<LocationLookupResponse>>(jsonResponse.Result);
-        return _mapper.Map<List<Location>>(cityLookupResponses);
+        return _mapper.Map<List<LocationDto>>(cityLookupResponses);
     }
 }

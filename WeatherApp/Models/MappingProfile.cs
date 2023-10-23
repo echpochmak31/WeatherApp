@@ -8,7 +8,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<LocationLookupResponse, Location>()
+        CreateMap<LocationLookupResponse, LocationDto>()
             .ForMember(dest => dest.LocationId, opt => opt.MapFrom(src => src.id))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.name))
             .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.region))
@@ -17,19 +17,19 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.lon));
 
 
-        CreateMap<LocationWeatherResponse, LocationWeather>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.location.name))
-            .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.location.region))
-            .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.location.country))
-            .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.location.lat))
-            .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.location.lon))
-            .ForMember(dest => dest.LastUpdated,
-                opt => opt.MapFrom(src => DateTimeOffset.FromUnixTimeSeconds(src.current.last_updated_epoch)))
-            .ForMember(dest => dest.TemperatureСelsius, opt => opt.MapFrom(src => src.current.temp_c))
-            .ForMember(dest => dest.FeelsLikeСelsius, opt => opt.MapFrom(src => src.current.feelslike_c))
-            .ForMember(dest => dest.ConditionText, opt => opt.MapFrom(src => src.current.condition.text))
-            .ForMember(dest => dest.ConditionImageUrl, opt => opt.MapFrom(src => src.current.condition.icon))
-            .ForMember(dest => dest.ConditionCode, opt => opt.MapFrom(src => src.current.condition.code));
+        CreateMap<LocationWeather, LocationWeatherDto>()
+            .ForPath(dest => dest.Location.Name, opt => opt.MapFrom(src => src.Name))
+            .ForPath(dest => dest.Location.Region, opt => opt.MapFrom(src => src.Region))
+            .ForPath(dest => dest.Location.Country, opt => opt.MapFrom(src => src.Country))
+            .ForPath(dest => dest.Location.Latitude, opt => opt.MapFrom(src => src.Latitude))
+            .ForPath(dest => dest.Location.Longitude, opt => opt.MapFrom(src => src.Longitude))
+            .ForPath(dest => dest.Current.LastUpdated,
+                opt => opt.MapFrom(src => src.LastUpdated.ToUnixTimeSeconds()))
+            .ForPath(dest => dest.Current.TempCelsius, opt => opt.MapFrom(src => src.TemperatureСelsius))
+            .ForPath(dest => dest.Current.FeelsLikeCelsius, opt => opt.MapFrom(src => src.FeelsLikeСelsius))
+            .ForPath(dest => dest.Current.Condition.Text, opt => opt.MapFrom(src => src.ConditionText))
+            .ForPath(dest => dest.Current.Condition.Icon, opt => opt.MapFrom(src => src.ConditionImageUrl))
+            .ForPath(dest => dest.Current.Condition.Code, opt => opt.MapFrom(src => src.ConditionCode));
 
         CreateMap<LocationGroup, LocationGroupDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
